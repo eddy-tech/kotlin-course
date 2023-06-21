@@ -11,7 +11,7 @@ data class Course(
     @Column(name = "ids", nullable = false)
     val id : Int?,
     @Column(name = "noms", nullable = false)
-    val name : String,
+    var name : String,
     @Column(name = "categories", nullable = false)
-    val category : String
+    var category : String
 )
