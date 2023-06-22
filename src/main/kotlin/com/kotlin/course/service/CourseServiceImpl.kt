@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class CourseServiceImpl @Autowired constructor(private val courseRepository: CourseRepository) : CourseService {
     companion object : KLogging()
 
-    override fun addCourse(courseDTO: CourseDTO): CourseDTO {
+    override fun addCourse(courseDTO: CourseDTO): Any {
         val courseEntity = courseDTO.let {
             Course(null, it.name, it.category)
         }
