@@ -1,6 +1,7 @@
 package com.kotlin.course.contrroller
 
 import com.kotlin.course.dto.CourseDTO
+import com.kotlin.course.entity.Course
 import com.kotlin.course.entity.courseEntityList
 import com.kotlin.course.repository.CourseRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,7 +18,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
  class CourseControllerIntTest {
-
     @Autowired
     private lateinit var webTestClient: WebTestClient
 
@@ -61,5 +61,40 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
         println("courseDto : $courseDTOs")
         assertEquals(3, courseDTOs!!.size)
+    }
+
+    @Test
+    fun givenCourseObjectAndCourseId_whenUpdateCourseObject_thenReturnCourseObject(){
+        // existing course
+        val course = Course(null, "Build restful APIs using spring boot and kotlin", "Development")
+        courseRepository.save(course)
+
+        //courseId - Updated courseDTOs
+        val updateCourseDTO = CourseDTO(null, "Build restful APIs using spring boot and kotlin-java", "Development")
+
+        val updateCourse = webTestClient
+            .put()
+            .uri("/v1/courses/{courseId}", course.id)
+            .bodyValue(updateCourseDTO)
+            .exchange()
+            .expectStatus().isOk
+            .expectBody(CourseDTO::class.java)
+            .returnResult()
+            .responseBody
+
+        assertEquals("Build restful APIs using spring boot and kotlin-java", updateCourse?.name)
+
+    }
+
+    @Test
+    fun givenCourseId_whenDeleteCourse_thenReturnNothing(){
+        val course = Course(null, "Build restful APIs using spring boot and kotlin", "Development")
+        courseRepository.save(course)
+
+        val deleteCourse = webTestClient
+            .delete()
+            .uri("/v1/courses/{courseId}", course.id)
+            .exchange()
+            .expectStatus().isNoContent
     }
 }

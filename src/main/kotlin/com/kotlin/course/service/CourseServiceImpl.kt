@@ -58,7 +58,17 @@ class CourseServiceImpl @Autowired constructor(private val courseRepository: Cou
     }
 
     override fun deleteCourse(id: Int) {
-        courseRepository.deleteById(id)
+        val existingCourse = courseRepository.findById(id)
+
+        if(existingCourse.isPresent) {
+            existingCourse.get()
+                .let {
+                    courseRepository.deleteById(id)
+                }
+        } else {
+            logger.error { "This course has null id" }
+            throw CourseNotFoundException("This course with id = $id has not been found")
+        }
     }
 
 }

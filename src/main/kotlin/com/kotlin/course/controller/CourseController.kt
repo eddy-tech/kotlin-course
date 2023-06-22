@@ -22,8 +22,6 @@ class CourseController (val courseService: CourseService) {
     fun updateCourse(@RequestBody courseDTO: CourseDTO, @PathVariable(name = "courseId") id: Int): CourseDTO = courseService.updateCourse(courseDTO, id)
 
     @DeleteMapping("{courseId}")
-    @ResponseStatus(HttpStatus.OK)
-    fun deleteCourse(@PathVariable(name = "courseId") id: Int) {
-        courseService.deleteCourse(id)
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteCourse(@PathVariable(name = "courseId") id: Int) = courseService.deleteCourse(id)
 }
